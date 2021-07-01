@@ -38,6 +38,11 @@ class Deck extends Component{
          this.button_next.style.width = `${(this.new_width / 2) * 0.30}px`;
 
          this.selection_buttons_container.style.bottom = `${this.view_port.getBoundingClientRect().top}px`;
+         for(let i = 0; i < this.images.children.length; i++){
+            this.selection_buttons_container.children[i].transitionDuration = '0.0s';
+            this.selection_buttons_container.children[i].style.width = `${this.new_width * 0.05}px`;
+            this.selection_buttons_container.children[i].style.height = `${this.new_width * 0.05}px`;
+         }
 
         this.order_cards();
 
@@ -56,6 +61,11 @@ class Deck extends Component{
              this.button_next.style.width = `${(this.new_width / 2) * 0.30}px`;
 
              this.selection_buttons_container.style.bottom = `${this.view_port.getBoundingClientRect().top}px`;
+             for(let i = 0; i < this.images.children.length; i++){
+                this.selection_buttons_container.children[i].transitionDuration = '0.0s';
+                this.selection_buttons_container.children[i].style.width = `${this.new_width * 0.05}px`;
+                this.selection_buttons_container.children[i].style.height = `${this.new_width * 0.05}px`;
+             }
 
     
             this.order_cards();
