@@ -29,8 +29,21 @@ class Deck extends Component{
         (img_width_as_percentage / 100) * window.innerWidth;
 
          this.view_port.style.width = `${this.new_width}px`;
-         
+
         this.order_cards();
+
+        window.addEventListener('resize', () => {
+            img_width_as_percentage = 50;
+            // img_width_as_percentage = window.innerWidth < 768 ? 100 : img_as_percentage;
+    
+            this.new_width = /Android|webOS|iPhone|iPad|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ? (img_width_as_percentage / 100) * window.screen.width :
+            (img_width_as_percentage / 100) * window.innerWidth;
+    
+             this.view_port.style.width = `${this.new_width}px`;
+    
+            this.order_cards();
+    
+        })
         /*******************************************************/
 
         /*********************BUTTON NAVIGATION******************/
@@ -83,7 +96,7 @@ const styles = {
         top: '50%',
         left: '50%',
         transform: 'translate(-50%, -50%)',
-        // overflow: 'hidden'
+        overflow: 'hidden'
         // backgroundColor: 'red'
     },
     images_container: {
