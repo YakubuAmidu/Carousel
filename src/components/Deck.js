@@ -37,6 +37,8 @@ class Deck extends Component{
          this.button_prev.style.width = `${(this.new_width / 2) * 0.30}px`;
          this.button_next.style.width = `${(this.new_width / 2) * 0.30}px`;
 
+         this.selection_buttons_container.style.bottom = `${this.view_port.getBoundingClientRect().top}px`;
+
         this.order_cards();
 
         window.addEventListener('resize', () => {
@@ -52,6 +54,9 @@ class Deck extends Component{
              this.nav_buttons_container.style.width = `${nav_buttons_placement_as_percentage}vw`;
              this.button_prev.style.width = `${(this.new_width / 2) * 0.30}px`;
              this.button_next.style.width = `${(this.new_width / 2) * 0.30}px`;
+
+             this.selection_buttons_container.style.bottom = `${this.view_port.getBoundingClientRect().top}px`;
+
     
             this.order_cards();
     
@@ -98,8 +103,12 @@ class Deck extends Component{
                     </div>
                 </div>
                 <div>
-                    <div style={styles.selection_buttons_container}>
-                     <div style={styles.selection_button}></div>
+                    <div ref={ref_id => this.selection_buttons_container = ref_id} style={styles.selection_buttons_container}>
+                        {
+                            this.state.cards.map((_, i) => {
+                                return (<div style={styles.selection_button} key={i}></div>)
+                            })
+                        }
                     </div>
                 </div>
             </Fragment>
@@ -154,23 +163,25 @@ const styles = {
     selection_buttons_container: {
         margin: 0,
         padding: 0,
-        width: '100vw',
-        height: "20px",
+        width: 'fit-content',
+        height: "fit-content",
         position: 'absolute',
         bottom: 0,
         left: '50%',
-        transform: 'translatex(-50%)',
+        transform: 'translateX(-50%)',
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'center',
-        alignItem: 'center',
+        alignItems: 'center',
         zIndex: 9999,
         pointerEvents: 'none',
         backgroundColor: 'rgba(0, 0, 255, 0.4)',
     },
     selection_button: {
-      width: '20%',
-      height: '20%',
+      margin: '0px 15px 0px 0px',
+      padding: 0,
+      width: '20px',
+      height: '20px',
       borderRadius: '50%',
       backgroundColor: 'grey',
       pointerEvents: 'all',
