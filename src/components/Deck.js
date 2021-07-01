@@ -1,11 +1,16 @@
 import React, { Component, Fragment } from 'react';
+import picsum from '../img/picsum.png';
 import Card from './Card';
 
 class Deck extends Component{
     constructor(props){
         super(props)
         this.state = {
-            cards: []
+            cards: [
+                <Card picsum={picsum} id="one" key="one"/>,
+                <Card picsum={picsum} id="two" key="two" />,
+                <Card picsum={picsum} id="three" key="three" />   
+            ]
         }
     }
     render(){

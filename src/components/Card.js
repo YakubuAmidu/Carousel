@@ -2,7 +2,9 @@ import React from 'react';
 
 function Card(props){
     return(
-        <div></div>
+        <div style={styles.card} id={props.id}>
+          <img style={styles.card_img} src={props.picsum} alt="ok" />
+        </div>
     )
 }
 
