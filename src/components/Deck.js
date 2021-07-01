@@ -31,6 +31,8 @@ class Deck extends Component{
         (img_width_as_percentage / 100) * window.innerWidth;
 
          this.view_port.style.width = `${this.new_width}px`;
+         this.button_prev.style.width = `${(this.new_width / 2) * 0.30}px`;
+         this.button_next.style.width = `${(this.new_width / 2) * 0.30}px`;
 
         this.order_cards();
 
@@ -42,6 +44,8 @@ class Deck extends Component{
             (img_width_as_percentage / 100) * window.innerWidth;
     
              this.view_port.style.width = `${this.new_width}px`;
+             this.button_prev.style.width = `${(this.new_width / 2) * 0.30}px`;
+             this.button_next.style.width = `${(this.new_width / 2) * 0.30}px`;
     
             this.order_cards();
     
@@ -78,9 +82,9 @@ class Deck extends Component{
     render(){
         return(
             <Fragment>
-                <div style={styles.nav_buttons_container}>
-                    <img style={styles.nav_button} src={leftArrow} alt="prev" id="prev" />
-                    <img style={styles.nav_button} src={rightArrow} alt="next" id="next" />
+                <div ref={ref_id => this.nav_buttons_container = ref_id} style={styles.nav_buttons_container}>
+                    <img ref={ref_id => this.button_prev = ref_id} style={styles.nav_button} src={leftArrow} alt="prev" id="prev" />
+                    <img ref={ref_id => this.button_next = ref_id} style={styles.nav_button} src={rightArrow} alt="next" id="next" />
                 </div>
                 <div ref={ref_id => this.view_port = ref_id} style={styles.view_port}>
                     <div ref={ref_id => this.images = ref_id} style={styles.images_container}>
