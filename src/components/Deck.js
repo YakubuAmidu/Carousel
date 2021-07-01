@@ -15,11 +15,39 @@ class Deck extends Component{
             ]
         }
     }
+
+    componentDidMount(){
+        this.number_of_cards_by_index = this.images.children.length - 1;
+        this.middle_card_by_index = Math.floor(this.number_of_cards_by_index / 2);
+
+        this.order_cards();
+    }
+
+    order_cards = () => {
+        const card_width = parseFloat(getComputedStyle(this.images.children[0]).width);
+        let counter_for_right = 1;
+        let counter_for_left = this.middle_card_by_index;
+
+        for(let i = 0; i < this.images.children.length; i++){
+            this.images.children[i].style.transitionDuration = '0.0s';
+
+            if(i < this.middle_card_by_index){
+                this.images.children[i].style.left = `${(counter_for_left * card_width) + (card_width / 2)}px`;
+                counter_for_left--;
+            } else if(i > this.middle_card_by_index){
+                this.images.children[i].style.left = `${(counter_for_right * card_width) + (card_width / 2)}px`;
+                counter_for_right++;
+            } else {
+                this.images.children[i].style.left = `${card_width / 2}px`;
+            }
+        }
+    }
+
     render(){
         return(
             <Fragment>
-                <div style={styles.view_port}>
-                    <div style={styles.images_container}>
+                <div ref={ref_id => this.view_port = ref_id} style={styles.view_port}>
+                    <div ref={ref_id => this.images = ref_id} style={styles.images_container}>
                         {this.state.cards}
                     </div>
                 </div>
@@ -39,6 +67,7 @@ const styles = {
         left: '50%',
         transform: 'translate(-50%, -50%)',
         // overflow: 'hidden'
+        // backgroundColor: 'red'
     },
     images_container: {
         margin: 0,
