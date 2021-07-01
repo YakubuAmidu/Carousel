@@ -25,9 +25,9 @@ class Deck extends Component{
 
         /******************* RESPONSIVE CODE ******************/
         let img_width_as_percentage = 50;
-        // img_width_as_percentage = window.innerWidth < 768 ? 100 : img_as_percentage;
+        //img_width_as_percentage = window.innerWidth < 768 ? 100 : img_width_as_percentage;
         let nav_buttons_placement_as_percentage = 60;
-        // nav_buttons_placement_as_percentage = window.innerWidth < 768 ? 100 : nav_buttons_placement_as_percentage;
+        //nav_buttons_placement_as_percentage = window.innerWidth < 768 ? 100 : nav_buttons_placement_as_percentage;
 
         this.new_width = /Android|webOS|iPhone|iPad|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ? (img_width_as_percentage / 100) * window.screen.width :
         (img_width_as_percentage / 100) * window.innerWidth;
@@ -41,9 +41,9 @@ class Deck extends Component{
 
         window.addEventListener('resize', () => {
             img_width_as_percentage = 50;
-            // img_width_as_percentage = window.innerWidth < 768 ? 100 : img_as_percentage;
+            //img_width_as_percentage = window.innerWidth < 768 ? 100 : img_width_as_percentage;
             nav_buttons_placement_as_percentage = 60;
-            // nav_buttons_placement_as_percentage = window.innerWidth < 768 ? 100 : nav_buttons_placement_as_percentage;
+            //nav_buttons_placement_as_percentage = window.innerWidth < 768 ? 100 : nav_buttons_placement_as_percentage;
     
             this.new_width = /Android|webOS|iPhone|iPad|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ? (img_width_as_percentage / 100) * window.screen.width :
             (img_width_as_percentage / 100) * window.innerWidth;
@@ -97,6 +97,11 @@ class Deck extends Component{
                         {this.state.cards}
                     </div>
                 </div>
+                <div>
+                    <div style={styles.selection_buttons_container}>
+                     <div style={styles.selection_button}></div>
+                    </div>
+                </div>
             </Fragment>
         )
     }
@@ -113,7 +118,7 @@ const styles = {
         left: '50%',
         transform: 'translate(-50%, -50%)',
         //overflow: 'hidden'
-        // backgroundColor: 'red'
+        backgroundColor: 'red'
     },
     images_container: {
         margin: 0,
@@ -145,7 +150,33 @@ const styles = {
         height: 'auto',
         pointerEvents: 'all',
         cursor: 'pointer'
+    },
+    selection_buttons_container: {
+        margin: 0,
+        padding: 0,
+        width: '100vw',
+        height: "20px",
+        position: 'absolute',
+        bottom: 0,
+        left: '50%',
+        transform: 'translatex(-50%)',
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItem: 'center',
+        zIndex: 9999,
+        pointerEvents: 'none',
+        backgroundColor: 'rgba(0, 0, 255, 0.4)',
+    },
+    selection_button: {
+      width: '20%',
+      height: '20%',
+      borderRadius: '50%',
+      backgroundColor: 'grey',
+      pointerEvents: 'all',
+      cursor: 'pointer'
     }
+    
 }
 
 export default Deck;
