@@ -26,11 +26,14 @@ class Deck extends Component{
         /******************* RESPONSIVE CODE ******************/
         let img_width_as_percentage = 50;
         // img_width_as_percentage = window.innerWidth < 768 ? 100 : img_as_percentage;
+        let nav_buttons_placement_as_percentage = 60;
+        // nav_buttons_placement_as_percentage = window.innerWidth < 768 ? 100 : nav_buttons_placement_as_percentage;
 
         this.new_width = /Android|webOS|iPhone|iPad|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ? (img_width_as_percentage / 100) * window.screen.width :
         (img_width_as_percentage / 100) * window.innerWidth;
 
          this.view_port.style.width = `${this.new_width}px`;
+         this.nav_buttons_container.style.width = `${nav_buttons_placement_as_percentage}vw`;
          this.button_prev.style.width = `${(this.new_width / 2) * 0.30}px`;
          this.button_next.style.width = `${(this.new_width / 2) * 0.30}px`;
 
@@ -39,11 +42,14 @@ class Deck extends Component{
         window.addEventListener('resize', () => {
             img_width_as_percentage = 50;
             // img_width_as_percentage = window.innerWidth < 768 ? 100 : img_as_percentage;
+            nav_buttons_placement_as_percentage = 60;
+            // nav_buttons_placement_as_percentage = window.innerWidth < 768 ? 100 : nav_buttons_placement_as_percentage;
     
             this.new_width = /Android|webOS|iPhone|iPad|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ? (img_width_as_percentage / 100) * window.screen.width :
             (img_width_as_percentage / 100) * window.innerWidth;
     
              this.view_port.style.width = `${this.new_width}px`;
+             this.nav_buttons_container.style.width = `${nav_buttons_placement_as_percentage}vw`;
              this.button_prev.style.width = `${(this.new_width / 2) * 0.30}px`;
              this.button_next.style.width = `${(this.new_width / 2) * 0.30}px`;
     
