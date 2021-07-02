@@ -69,11 +69,26 @@ class Deck extends Component{
 
     
             this.order_cards();
+
+            this.right_boundary = parseFloat(this.images.children[this.number_of_cards_by_index].style.left) + this.new_width;
+        this.left_boundary = parseFloat(this.images.children[0].style.left) - this.new_width;
+
+        for(let i = 0; i < this.images.children.length; i++){
+            this.last_positions[i] = parseFloat(this.images.children[i].style.left);
+        }
     
         })
         /*******************************************************/
 
+        this.last_positions = [];
+        this.right_boundary = parseFloat(this.images.children[this.number_of_cards_by_index].style.left) + this.new_width;
+        this.left_boundary = parseFloat(this.images.children[0].style.left) - this.new_width;
+
+        for(let i = 0; i < this.images.children.length; i++){
+            this.last_positions.push(parseFloat(this.images.children[i].style.left));
+        }
         /*********************BUTTON NAVIGATION******************/
+        this.scroll_in_progress = false;
         /********************************************************/
 
         /*********************AUTOPLAY CODE***********************/
@@ -100,12 +115,36 @@ class Deck extends Component{
         }
     }
 
+    handle_boundaries = () => {
+        if(this.last_positions[0] <= this.left_boundary){
+            const end_of_deck = this.last_positions[this.number_of_cards_by_index] + this.new_width;
+
+            this.images.children[0].style.left = `${end_of_deck}px`;
+            this.last_positions[0] = end_of_deck;
+
+            this.images.appendChild(this.images.children[0], this.images.children[this.images.number_of_cards_by_index]);
+            this.last_positions.splice(this.number_of_cards_by_index, 0, this.last_positions.shift());
+        }
+    }
+
+    handle_next = () => {
+        for(let i = 0; i < this.images.children.length; i++){
+            this.images.children[i].style.transitionDuration = '0.0s';
+
+            const updated_position = this.last_positions[i] - this.new_width;
+
+            this.images.children[i].style.left = `${updated_position}px`;
+            this.last_positions[i] = updated_position;
+        }
+        this.handle_boundaries();
+    }
+
     render(){
         return(
             <Fragment>
                 <div ref={ref_id => this.nav_buttons_container = ref_id} style={styles.nav_buttons_container}>
-                    <img ref={ref_id => this.button_prev = ref_id} style={styles.nav_button} src={leftArrow} alt="prev" id="prev" />
-                    <img ref={ref_id => this.button_next = ref_id} style={styles.nav_button} src={rightArrow} alt="next" id="next" />
+                    <img onClick={this.handle_prev} ref={ref_id => this.button_prev = ref_id} style={styles.nav_button} src={leftArrow} alt="prev" id="prev" />
+                    <img onClick={this.handle_next} ref={ref_id => this.button_next = ref_id} style={styles.nav_button} src={rightArrow} alt="next" id="next" />
                 </div>
                 <div ref={ref_id => this.view_port = ref_id} style={styles.view_port}>
                     <div ref={ref_id => this.images = ref_id} style={styles.images_container}>
@@ -137,7 +176,7 @@ const styles = {
         left: '50%',
         transform: 'translate(-50%, -50%)',
         //overflow: 'hidden'
-        backgroundColor: 'red'
+        //backgroundColor: 'red'
     },
     images_container: {
         margin: 0,
