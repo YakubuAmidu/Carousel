@@ -97,13 +97,18 @@ class Deck extends Component{
         /********************************************************/
 
         /*********************AUTOPLAY CODE***********************/
+        this.autoplay_timeout_id = null;
+        this.autoplay_interval_id = null;
         /**********************************************************/
+
+        /******************** INIT CODE ****************************/
+        this.selection_buttons_container.children[0].click();
     }
 
     update_selection = () => {
         for (let i = 0; i < this.images.children.length; i++){
             if(i === this.current_card){
-                this.selection_buttons_container.children[i].style.backgroundColor = 'red';
+                this.selection_buttons_container.children[i].style.backgroundColor = 'gold';
             }else {
                 this.selection_buttons_container.children[i].style.backgroundColor = 'grey';
             }
@@ -174,7 +179,8 @@ class Deck extends Component{
 
         setTimeout(() => {
             this.scroll_in_progress = false;
-        }, 200)
+            this.start_autoplay();
+        }, 2000)
     }
 
     handle_prev = () => {
@@ -198,7 +204,8 @@ class Deck extends Component{
 
         setTimeout(() => {
             this.scroll_in_progress = false;
-        }, 200)
+            this.start_autoplay();
+        }, 2000)
     }
 
     /********************************************************/
@@ -226,12 +233,35 @@ class Deck extends Component{
         }
 
         this.current_card = new_card;
+
         this.update_selection();
+        this.start_autoplay();
     }
     /********************************************************/
 
     /*********************AUTOPLAY CODE***********************/
+    start_autoplay = () => {
+        clearTimeout(this.autoplay_timeout_id);
+        clearInterval(this.autoplay_interval_id);
 
+        this.autoplay_timeout_id = setTimeout(() => {
+            this.autoplay_interval_id = setInterval(() => {
+                for(let i = 0; i < this.images.children.length; i++){
+                    this.images.children[i].style.transitionDuration = '0.0s';
+        
+                    const updated_position = this.last_positions[i] - this.new_width;
+        
+                    this.images.children[i].style.left = `${updated_position}px`;
+                    this.last_positions[i] = updated_position;
+                }
+        
+                this.current_card = (this.current_card === this.number_of_cards_by_index) ? 0 : ++this.current_card;
+        
+                this.handle_boundaries();
+                this.update_selection();
+            }, 2000)
+        }, 1500)
+    }
     /**********************************************************/
 
     render(){
@@ -270,7 +300,7 @@ const styles = {
         top: '50%',
         left: '50%',
         transform: 'translate(-50%, -50%)',
-        //overflow: 'hidden'
+        overflow: 'hidden'
         //backgroundColor: 'red'
     },
     images_container: {
@@ -319,7 +349,7 @@ const styles = {
         alignItems: 'center',
         zIndex: 9999,
         pointerEvents: 'none',
-        backgroundColor: 'rgba(0, 0, 255, 0.4)',
+        //backgroundColor: 'rgba(0, 0, 255, 0.4)',
     },
     selection_button: {
       margin: '0px 15px 0px 0px',
