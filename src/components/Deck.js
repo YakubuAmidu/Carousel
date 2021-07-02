@@ -2,6 +2,7 @@ import React, { Component, Fragment } from 'react';
 import picsum1 from '../img/picsum1.png';
 import picsum2 from '../img/picsum2.png';
 import picsum3 from '../img/picsum3.png';
+import picsum4 from '../img/picsum4.png';
 import leftArrow from '../img/left-arrow.png';
 import rightArrow from '../img/right-arrow.png';
 import Card from './Card';
@@ -13,7 +14,8 @@ class Deck extends Component{
             cards: [
                 <Card picsum={picsum1} id="one" key="one"/>,
                 <Card picsum={picsum2} id="two" key="two" />,
-                <Card picsum={picsum3} id="three" key="three" />   
+                <Card picsum={picsum3} id="three" key="three" /> ,  
+                <Card picsum={picsum4} id="four" key="four" />
             ]
         }
     }
@@ -21,6 +23,7 @@ class Deck extends Component{
     componentDidMount(){
         this.number_of_cards_by_index = this.images.children.length - 1;
         this.middle_card_by_index = Math.floor(this.number_of_cards_by_index / 2);
+        this.current_card = this.middle_card_by_index;
         
 
         /******************* RESPONSIVE CODE ******************/
@@ -45,6 +48,7 @@ class Deck extends Component{
          }
 
         this.order_cards();
+        this.update_selection();
 
         window.addEventListener('resize', () => {
             img_width_as_percentage = 50;
@@ -71,7 +75,7 @@ class Deck extends Component{
             this.order_cards();
 
             this.right_boundary = parseFloat(this.images.children[this.number_of_cards_by_index].style.left) + this.new_width;
-        this.left_boundary = parseFloat(this.images.children[0].style.left) - this.new_width;
+            this.left_boundary = parseFloat(this.images.children[0].style.left) - this.new_width;
 
         for(let i = 0; i < this.images.children.length; i++){
             this.last_positions[i] = parseFloat(this.images.children[i].style.left);
@@ -87,12 +91,23 @@ class Deck extends Component{
         for(let i = 0; i < this.images.children.length; i++){
             this.last_positions.push(parseFloat(this.images.children[i].style.left));
         }
+
         /*********************BUTTON NAVIGATION******************/
         this.scroll_in_progress = false;
         /********************************************************/
 
         /*********************AUTOPLAY CODE***********************/
         /**********************************************************/
+    }
+
+    update_selection = () => {
+        for (let i = 0; i < this.images.children.length; i++){
+            if(i === this.current_card){
+                this.selection_buttons_container.children[i].style.backgroundColor = 'red';
+            }else {
+                this.selection_buttons_container.children[i].style.backgroundColor = 'grey';
+            }
+        }
     }
 
     order_cards = () => {
@@ -125,9 +140,24 @@ class Deck extends Component{
             this.images.appendChild(this.images.children[0], this.images.children[this.images.number_of_cards_by_index]);
             this.last_positions.splice(this.number_of_cards_by_index, 0, this.last_positions.shift());
         }
+        if(this.last_positions[this.number_of_cards_by_index] >= this.right_boundary){
+            const beginning_of_deck = this.last_positions[0] - this.new_width;
+
+            this.images.children[this.number_of_cards_by_index].style.left = `${beginning_of_deck}px`;
+            this.last_positions[this.number_of_cards_by_index] = beginning_of_deck;
+
+            this.images.insertBefore(this.images.children[this.number_of_cards_by_index], this.images.children[0])
+            this.last_positions.splice(0, 0, this.last_positions.pop());
+        }
     }
 
+    /*********************BUTTON NAVIGATION******************/
+    
     handle_next = () => {
+        if(this.scroll_in_progress) return;
+
+        this.scroll_in_progress = true;
+
         for(let i = 0; i < this.images.children.length; i++){
             this.images.children[i].style.transitionDuration = '0.0s';
 
@@ -136,8 +166,73 @@ class Deck extends Component{
             this.images.children[i].style.left = `${updated_position}px`;
             this.last_positions[i] = updated_position;
         }
+
+        this.current_card = (this.current_card === this.number_of_cards_by_index) ? 0 : ++this.current_card;
+
         this.handle_boundaries();
+        this.update_selection();
+
+        setTimeout(() => {
+            this.scroll_in_progress = false;
+        }, 200)
     }
+
+    handle_prev = () => {
+        if(this.scroll_in_progress) return;
+
+        this.scroll_in_progress = true;
+
+        for(let i = 0; i < this.images.children.length; i++){
+            this.images.children[i].style.transitionDuration = '0.0s';
+
+            const updated_position = this.last_positions[i] + this.new_width;
+
+            this.images.children[i].style.left = `${updated_position}px`;
+            this.last_positions[i] = updated_position;
+        }
+        
+        this.current_card = (this.current_card === 0) ? 0 : --this.current_card;
+
+        this.handle_boundaries();
+        this.update_selection();
+
+        setTimeout(() => {
+            this.scroll_in_progress = false;
+        }, 200)
+    }
+
+    /********************************************************/
+
+    /*******************SELECTION NAVIGATION*****************/
+    handle_selection = event => {
+        if(event.target === this.selection_buttons_container) return;
+
+        let new_card = null;
+
+        for(let i = 0; i < this.images.children.length; i++){
+            if(event.target === this.selection_buttons_container.children[i]) new_card = i;
+        }
+
+        for(let i = 0; i < this.images.children.length; i++){
+            const updated_position = this.last_positions[i] + ((this.current_card - new_card) * this.new_width);
+
+            this.images.children[i].style.transitionDuration = '0.0s';
+            this.images.children[i].style.left = `${updated_position}px`;
+            this.last_positions[i] = updated_position;
+        }
+
+        for(let i = 0; i < Math.abs(this.current_card - new_card); i++){
+            this.handle_boundaries();
+        }
+
+        this.current_card = new_card;
+        this.update_selection();
+    }
+    /********************************************************/
+
+    /*********************AUTOPLAY CODE***********************/
+
+    /**********************************************************/
 
     render(){
         return(
@@ -152,7 +247,7 @@ class Deck extends Component{
                     </div>
                 </div>
                 <div>
-                    <div ref={ref_id => this.selection_buttons_container = ref_id} style={styles.selection_buttons_container}>
+                    <div onClick={this.handle_selection}ref={ref_id => this.selection_buttons_container = ref_id} style={styles.selection_buttons_container}>
                         {
                             this.state.cards.map((_, i) => {
                                 return (<div style={styles.selection_button} key={i}></div>)
